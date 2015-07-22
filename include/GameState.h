@@ -1,5 +1,8 @@
 #pragma once
 #include <Terrain.h>
+#include <Camera.h>
+
+#include <glm\glm.hpp>
 
 class GameState
 {
@@ -8,5 +11,6 @@ public:
 	~GameState();
 
 	Terrain terrain;
+	Camera camera;
 };
 
