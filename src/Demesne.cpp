@@ -39,8 +39,10 @@ void Demesne::Execute()
 	GameState state(player);
 	//TerrainGraphicsComponent renderer(state);
 
+	PlayerController playerController(player);
+
 	std::vector<ControllerComponent *> controllerComponents;
-	controllerComponents.push_back(new PlayerController(player));
+	controllerComponents.push_back(&playerController);
 
 	TerrainPhysicsComponent terrainPhysics(state.terrain);
 	std::vector<PhysicsComponent> physicsComponents;
@@ -53,11 +55,18 @@ void Demesne::Execute()
 	graphicsComponents.push_back(new PlayerGraphics(player, renderer));
 
 
-	sf::Clock clock;
+	sf::Clock fpsClock;
 	float lastTime = 0;
 	int fps = 0;
 
+	int MS_PER_UPDATE = 10;
+	sf::Clock updateClock;
+	double lag = 0.0;
+
 	while (window.isOpen()) {
+		double elapsed = updateClock.restart().asMicroseconds()/1000.0;
+		lag += elapsed;
+
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
@@ -69,24 +78,36 @@ void Demesne::Execute()
 				// adjust the viewport when the window is resized
 				glViewport(0, 0, event.size.width, event.size.height);
 			}
+
+			if (event.type == sf::Event::KeyPressed)
+				playerController.HandleKeyPressed(event.key.code);
+
+			if (event.type == sf::Event::KeyReleased)
+				playerController.HandleKeyReleased(event.key.code);
 				
 		}
 
 		state.camera.Update();
+		while (lag >= MS_PER_UPDATE)
+		{
+			for (ControllerComponent* c : controllerComponents)
+			{
+				c->Update(state);
+			}
+
+			for (PhysicsComponent& p : physicsComponents)
+			{
+				p.Update(state);
+				terrainPhysics.CheckCollision(p);
+			}
+
+			lag -= MS_PER_UPDATE;
+		}
+
+		
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);     // Clear The Screen And The Depth Buffer
 		glClearColor(0.1f, 0.3f, 8.0f, 0.0f);
-
-		for (ControllerComponent* c : controllerComponents)
-		{
-			c->Update(state);
-		}
-
-		for (PhysicsComponent& p : physicsComponents)
-		{
-			p.Update(state);
-			terrainPhysics.CheckCollision(p);
-		}
 
 		for (GraphicsComponent* g : graphicsComponents)
 		{
@@ -96,14 +117,14 @@ void Demesne::Execute()
 
 		window.display();
 
-		if (clock.getElapsedTime().asSeconds() > 1.0)
+		if (fpsClock.getElapsedTime().asSeconds() > 1.0)
 		{
 
 			std::stringstream title;
-			title << "Demense (FPS " << 1000.0/fps << ")";
+			title << "Demense (FPS " << 1000.0/fps << ", Position (" << player.position[0] << ", " << player.position[1] << "))";
 			window.setTitle(title.str());
 
-			clock.restart();
+			fpsClock.restart();
 			fps = 0;
 		}
 

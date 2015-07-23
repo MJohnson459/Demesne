@@ -13,10 +13,16 @@ public:
 
 	void Update(GameState& state);
 
+	void HandleKeyPressed(sf::Keyboard::Key key);
+
+	void HandleKeyReleased(sf::Keyboard::Key key);
+
 private:
 	/// The player entity
 	Entity& entity;
 
 	bool jumping;
+
+	float maxSpeed;
 };
 
