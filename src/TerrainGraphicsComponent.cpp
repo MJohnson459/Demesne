@@ -10,13 +10,16 @@ TerrainGraphicsComponent::TerrainGraphicsComponent(GameState& state)
 		throw;
 	}
 	
-	g_vertex_buffer_data.push_back(Position(-1.0f, -1.0));
-	g_vertex_buffer_data.push_back(Position(1.0f, -1.0));
-	g_vertex_buffer_data.push_back(Position(0.0f, 1.0));
+	g_vertex_buffer_data.push_back(glm::vec3(-1.0f, -1.0f, 0.0f));
+	g_vertex_buffer_data.push_back(glm::vec3(1.0f, -1.0f, 0.0f));
+	g_vertex_buffer_data.push_back(glm::vec3(0.0f, 1.0f, 0.0f));
 
-	g_color_buffer_data.push_back(Color(1, 0, 0));
-	g_color_buffer_data.push_back(Color(0, 1, 0));
-	g_color_buffer_data.push_back(Color(0, 0, 1));
+	g_color_buffer_data.push_back(glm::vec3(1, 0, 0));
+	g_color_buffer_data.push_back(glm::vec3(0, 1, 0));
+	g_color_buffer_data.push_back(glm::vec3(0, 0, 1));
+
+
+	modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(state.terrain.WIDTH / -2.0f, state.terrain.HEIGHT / -2.0f, 0.0f)); // Changes for each model !
 
 
 	// Create and compile our GLSL program from the shaders
@@ -39,26 +42,27 @@ TerrainGraphicsComponent::TerrainGraphicsComponent(GameState& state)
 
 	g_vertex_buffer_data.clear();
 	g_color_buffer_data.clear();
+	g_vertex_buffer_data.reserve(state.terrain.WIDTH*state.terrain.HEIGHT);
+	g_vertex_buffer_data.reserve(state.terrain.WIDTH*state.terrain.HEIGHT);
 
-	for (int i = 0; i < Terrain::WIDTH; ++i)
+	for (int i = 0; i < state.terrain.WIDTH; ++i)
 	{
-		for (int j = 0; j < Terrain::HEIGHT; ++j)
+		for (int j = 0; j < state.terrain.HEIGHT; ++j)
 		{
-			g_vertex_buffer_data.push_back(Position(i, j));
-			g_vertex_buffer_data.push_back(Position(i + 1.0, j));
-			g_vertex_buffer_data.push_back(Position(i + 1.0, j + 1.0));
+			g_vertex_buffer_data.push_back(glm::vec3(i, j, 0));
+			g_vertex_buffer_data.push_back(glm::vec3(i + 1.0, j, 0));
+			g_vertex_buffer_data.push_back(glm::vec3(i + 1.0, j + 1.0, 0));
 
-			g_vertex_buffer_data.push_back(Position(i, j));
-			g_vertex_buffer_data.push_back(Position(i + 1.0, j + 1.0));
-			g_vertex_buffer_data.push_back(Position(i, j + 1.0));
+			g_vertex_buffer_data.push_back(glm::vec3(i, j, 0));
+			g_vertex_buffer_data.push_back(glm::vec3(i + 1.0, j + 1.0, 0));
+			g_vertex_buffer_data.push_back(glm::vec3(i, j + 1.0, 0));
 
-			g_color_buffer_data.push_back(Color(state.terrain.block_types[state.terrain(i, j)].color));
-			g_color_buffer_data.push_back(Color(state.terrain.block_types[state.terrain(i, j)].color));
-			g_color_buffer_data.push_back(Color(state.terrain.block_types[state.terrain(i, j)].color));
-			g_color_buffer_data.push_back(Color(state.terrain.block_types[state.terrain(i, j)].color));
-			g_color_buffer_data.push_back(Color(state.terrain.block_types[state.terrain(i, j)].color));
-			g_color_buffer_data.push_back(Color(state.terrain.block_types[state.terrain(i, j)].color));
-
+			g_color_buffer_data.push_back(state.terrain.block_types[state.terrain(i, j)].color);
+			g_color_buffer_data.push_back(state.terrain.block_types[state.terrain(i, j)].color);
+			g_color_buffer_data.push_back(state.terrain.block_types[state.terrain(i, j)].color);
+			g_color_buffer_data.push_back(state.terrain.block_types[state.terrain(i, j)].color);
+			g_color_buffer_data.push_back(state.terrain.block_types[state.terrain(i, j)].color);
+			g_color_buffer_data.push_back(state.terrain.block_types[state.terrain(i, j)].color);
 		}
 	}
 
@@ -95,15 +99,8 @@ void TerrainGraphicsComponent::Render(GameState& state)
 	// Use our shader
 	glUseProgram(programID);
 
-	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-	//glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-	glm::mat4 Projection = glm::ortho(0.0f, 40.0f, 0.0f, 30.0f, 0.1f, 100.0f);
-	// Camera matrix
-	glm::mat4 View = state.camera.GetViewMatrix();
-	// Model matrix : an identity matrix (model will be at the origin)
-	glm::mat4 Model = glm::translate(glm::mat4(1.f), glm::vec3(state.terrain.WIDTH / -2.0f, state.terrain.HEIGHT / -2.0f, 0.0f)); // Changes for each model !
 	// Our ModelViewProjection : multiplication of our 3 matrices
-	glm::mat4 MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around
+	glm::mat4 MVP = state.camera.GetPVMatrix() * modelMatrix; // Remember, matrix multiplication is the other way around
 
 	// Send our transformation to the currently bound shader,
 	// in the "MVP" uniform

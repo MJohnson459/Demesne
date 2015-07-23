@@ -2,12 +2,14 @@
 
 #include <GameState.h>
 
+/// Abstract class which renders an Entity
 class GraphicsComponent
 {
 public:
 	GraphicsComponent();
 	~GraphicsComponent();
 
-	void Render(GameState* gs);
+	/// Render an entity
+	virtual void Render(GameState& state) = 0;
 };
 

@@ -1,4 +1,5 @@
 build
+external
 
 # Compiled Object files
 *.slo

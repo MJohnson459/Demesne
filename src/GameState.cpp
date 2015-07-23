@@ -2,7 +2,9 @@
 
 
 GameState::GameState()
+	: camera(800, 600)
 {
+
 }
 
 
