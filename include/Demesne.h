@@ -7,6 +7,7 @@
 #include <SFML/System.hpp>
 
 #include <TerrainGraphicsComponent.h>
+#include <TerrainPhysicsComponent.h>
 #include <PlayerController.h>
 #include <PlayerGraphics.h>
 #include <Entity.h>

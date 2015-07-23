@@ -15,5 +15,6 @@ public:
 
 	glm::vec3 position;
 	glm::vec2 size;
+	glm::vec3 velocity;
 };
 

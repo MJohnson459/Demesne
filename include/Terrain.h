@@ -4,6 +4,7 @@
 #include <vector>
 #include <random>
 #include <glm\glm.hpp>
+#include <Entity.h>
 
 /// Struct which stores all the information about a particular block type
 struct BlockType
@@ -23,7 +24,10 @@ public:
 	~Terrain();
 
 	/// Get block type at (x,y)
-	uint16_t& operator()(uint32_t x, uint32_t y);
+	uint16_t& operator()(int x, int y);
+
+	/// Get block type at (x,y)
+	uint16_t& operator()(glm::vec2 vec);
 
 	/// Width of the terrain
 	static const uint32_t WIDTH = 1000;

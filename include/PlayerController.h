@@ -16,5 +16,7 @@ public:
 private:
 	/// The player entity
 	Entity& entity;
+
+	bool jumping;
 };
 

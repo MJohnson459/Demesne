@@ -8,6 +8,7 @@ Terrain::Terrain()
 	block_types.push_back(BlockType(glm::vec3(0, 1, 0)));
 	block_types.push_back(BlockType(glm::vec3(0, 0, 1)));
 	block_types.push_back(BlockType(glm::vec3(1, 0, 0)));
+	block_types.push_back(BlockType(glm::vec3(1, 0, 1)));
 
 
 	tiles.reserve(WIDTH*HEIGHT);
@@ -25,7 +26,7 @@ Terrain::Terrain()
 		tiles.push_back(0);
 	}
 
-	operator()(WIDTH / 2, HEIGHT / 2) = 3;
+	operator()(-1, 0) = 3;
 }
 
 
@@ -33,7 +34,18 @@ Terrain::~Terrain()
 {
 }
 
-uint16_t& Terrain::operator()(uint32_t x, uint32_t y)
+uint16_t& Terrain::operator()(int x, int y)
 {
+	x += WIDTH / 2;
+	y += HEIGHT / 2;
+
+	if (x >= WIDTH) x = WIDTH-1;
+	if (y >= HEIGHT) y = HEIGHT-1;
+
 	return tiles[y*Terrain::WIDTH + x];
+}
+
+uint16_t& Terrain::operator()(glm::vec2 vec)
+{
+	return operator()(floor(vec[0]), floor(vec[1]));
 }

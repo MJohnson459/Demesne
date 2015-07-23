@@ -14,7 +14,8 @@ public:
 	/// Update method expected to be called every frame
 	void Update(GameState& state);
 
-private:
+	void HandleCollision(glm::vec2 collision);
+
 	/// The entity this PhysicsComponent acts upon (its owner)
 	Entity& entity;
 };

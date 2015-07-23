@@ -42,6 +42,7 @@ void Demesne::Execute()
 	std::vector<ControllerComponent *> controllerComponents;
 	controllerComponents.push_back(new PlayerController(player));
 
+	TerrainPhysicsComponent terrainPhysics(state.terrain);
 	std::vector<PhysicsComponent> physicsComponents;
 	physicsComponents.push_back(PhysicsComponent(player));
 
@@ -84,6 +85,7 @@ void Demesne::Execute()
 		for (PhysicsComponent& p : physicsComponents)
 		{
 			p.Update(state);
+			terrainPhysics.CheckCollision(p);
 		}
 
 		for (GraphicsComponent* g : graphicsComponents)

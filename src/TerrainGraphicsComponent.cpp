@@ -24,19 +24,34 @@ TerrainGraphicsComponent::TerrainGraphicsComponent(GameState& state, OpenGLRende
 	g_vertex_buffer_data.clear();
 	g_color_buffer_data.clear();
 	g_vertex_buffer_data.reserve(state.terrain.WIDTH*state.terrain.HEIGHT);
-	g_vertex_buffer_data.reserve(state.terrain.WIDTH*state.terrain.HEIGHT);
+	g_color_buffer_data.reserve(state.terrain.WIDTH*state.terrain.HEIGHT);
 
 	for (int i = 0; i < state.terrain.WIDTH; ++i)
 	{
 		for (int j = 0; j < state.terrain.HEIGHT; ++j)
 		{
-			g_vertex_buffer_data.push_back(glm::vec3(i, j, 0));
-			g_vertex_buffer_data.push_back(glm::vec3(i + 1.0, j, 0));
-			g_vertex_buffer_data.push_back(glm::vec3(i + 1.0, j + 1.0, 0));
+			
+		}
+	}
 
-			g_vertex_buffer_data.push_back(glm::vec3(i, j, 0));
-			g_vertex_buffer_data.push_back(glm::vec3(i + 1.0, j + 1.0, 0));
-			g_vertex_buffer_data.push_back(glm::vec3(i, j + 1.0, 0));
+	int xOffset = state.terrain.WIDTH / 2;
+	int yOffset = state.terrain.HEIGHT / 2;
+
+	for (int i = -xOffset; i < xOffset / 2; ++i)
+	{
+		for (int j = -yOffset; j < yOffset / 2; ++j)
+		{
+			if (state.terrain(i, j) == 0) continue;
+
+			float a = i + xOffset;
+			float b = j + yOffset;
+			g_vertex_buffer_data.push_back(glm::vec3(a,        b,        0.0f));
+			g_vertex_buffer_data.push_back(glm::vec3(a + 1.0f, b,        0.0f));
+			g_vertex_buffer_data.push_back(glm::vec3(a + 1.0f, b + 1.0f, 0.0f));
+
+			g_vertex_buffer_data.push_back(glm::vec3(a,        b,        0.0f));
+			g_vertex_buffer_data.push_back(glm::vec3(a + 1.0f, b + 1.0f, 0.0f));
+			g_vertex_buffer_data.push_back(glm::vec3(a,        b + 1.0f, 0.0f));
 
 			g_color_buffer_data.push_back(state.terrain.block_types[state.terrain(i, j)].color);
 			g_color_buffer_data.push_back(state.terrain.block_types[state.terrain(i, j)].color);
