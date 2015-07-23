@@ -8,7 +8,7 @@
 class GameState
 {
 public:
-	GameState();
+	GameState(Entity& player);
 	~GameState();
 
 	/// Save the current game state

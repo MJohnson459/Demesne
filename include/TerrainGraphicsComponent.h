@@ -4,26 +4,23 @@
 #include <SFML/Window.hpp>
 #include <GameState.h>
 #include <vector>
+#include <OpenGLRenderer.h>
 
-#include <GL/glew.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <shader.hpp>
 
 /// Draws the terrain
 class TerrainGraphicsComponent :
 	public GraphicsComponent
 {
 public:
-	TerrainGraphicsComponent(GameState& state);
+	TerrainGraphicsComponent(GameState& state, OpenGLRenderer& renderer);
 	~TerrainGraphicsComponent();
 
 	/// Render the terrain held in state
 	void Render(GameState& state);
 
 private:
+
+	OpenGLRenderer& renderer;
 
 	/// Model position matrix
 	glm::mat4 modelMatrix;
@@ -35,16 +32,7 @@ private:
 	std::vector<glm::vec3> g_color_buffer_data;
 
 
-	// OpenGL variables
-
-	/// Loaded GLSL program
-	GLuint programID;
-
-	/// VAO id
-	GLuint VertexArrayID;
-
-	/// PVM matrix id
-	GLuint MatrixID;
+	
 
 	/// Vertex position buffer id
 	GLuint vertexbuffer;

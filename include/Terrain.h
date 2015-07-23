@@ -23,13 +23,13 @@ public:
 	~Terrain();
 
 	/// Get block type at (x,y)
-	uint16_t operator()(uint32_t x, uint32_t y);
+	uint16_t& operator()(uint32_t x, uint32_t y);
 
 	/// Width of the terrain
 	static const uint32_t WIDTH = 1000;
 
 	/// Height of the terrain
-	static const uint32_t HEIGHT = 100;
+	static const uint32_t HEIGHT = 200;
 
 	/// A vector of the currently loaded block types
 	std::vector<BlockType> block_types;

@@ -4,13 +4,13 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <stdint.h>
-
+#include <Entity.h>
 
 /// \brief The camera controls the viewport and the Perspective and View matrices.
 class Camera
 {
 public:
-	Camera(uint32_t width, uint32_t height);
+	Camera(uint32_t width, uint32_t height, Entity& entity);
 	~Camera();
 
 	/// The matrix representing Perspective * View
@@ -25,6 +25,9 @@ public:
 private:
 	/// Current position of the camera
 	glm::vec3 position;
+
+	/// Entity the camera is centered on
+	Entity& entity;
 
 	/// Viewport height
 	uint32_t HEIGHT;

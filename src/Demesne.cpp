@@ -34,11 +34,10 @@ void Demesne::Execute()
 	std::cout << "version:" << settings.majorVersion << "." << settings.minorVersion << std::endl;
 
 
-	GameState state;
-	//TerrainGraphicsComponent renderer(state);
-
-
 	Entity player;
+
+	GameState state(player);
+	//TerrainGraphicsComponent renderer(state);
 
 	std::vector<ControllerComponent *> controllerComponents;
 	controllerComponents.push_back(new PlayerController(player));
@@ -46,9 +45,11 @@ void Demesne::Execute()
 	std::vector<PhysicsComponent> physicsComponents;
 	physicsComponents.push_back(PhysicsComponent(player));
 
+
+	OpenGLRenderer renderer;
 	std::vector<GraphicsComponent *> graphicsComponents;
-	graphicsComponents.push_back(new PlayerGraphics(player));
-	graphicsComponents.push_back(new TerrainGraphicsComponent(state));
+	graphicsComponents.push_back(new TerrainGraphicsComponent(state, renderer));
+	graphicsComponents.push_back(new PlayerGraphics(player, renderer));
 
 
 	sf::Clock clock;

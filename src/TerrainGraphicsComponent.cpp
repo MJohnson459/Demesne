@@ -1,14 +1,9 @@
 #include "TerrainGraphicsComponent.h"
 
-TerrainGraphicsComponent::TerrainGraphicsComponent(GameState& state)
-	:g_vertex_buffer_data()
+TerrainGraphicsComponent::TerrainGraphicsComponent(GameState& state, OpenGLRenderer& renderer)
+	: renderer(renderer)
 {
-	// Initialize GLEW
-	glewExperimental = true; // Needed for core profile
-	if (glewInit() != GLEW_OK) {
-		fprintf(stderr, "Failed to initialize GLEW\n");
-		throw;
-	}
+	
 	
 	g_vertex_buffer_data.push_back(glm::vec3(-1.0f, -1.0f, 0.0f));
 	g_vertex_buffer_data.push_back(glm::vec3(1.0f, -1.0f, 0.0f));
@@ -21,22 +16,8 @@ TerrainGraphicsComponent::TerrainGraphicsComponent(GameState& state)
 
 	modelMatrix = glm::translate(glm::mat4(1.f), glm::vec3(state.terrain.WIDTH / -2.0f, state.terrain.HEIGHT / -2.0f, 0.0f)); // Changes for each model !
 
-
-	// Create and compile our GLSL program from the shaders
-	programID = LoadShaders("data/shaders/SimpleVertexShader.vertexshader", "data/shaders/SimpleFragmentShader.fragmentshader");
-
-	
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
-
 	// Generate 1 buffer, put the resulting identifier in vertexbuffer
 	glGenBuffers(1, &vertexbuffer);
-
-
-	// Get a handle for our "MVP" uniform.
-	// Only at initialisation time.
-	MatrixID = glGetUniformLocation(programID, "MVP");
-
 	glGenBuffers(1, &colorbuffer);	
 
 
@@ -84,8 +65,7 @@ TerrainGraphicsComponent::~TerrainGraphicsComponent()
 {
 	// Cleanup VBO and shader
 	glDeleteBuffers(1, &vertexbuffer);
-	glDeleteProgram(programID);
-	glDeleteVertexArrays(1, &VertexArrayID);
+	glDeleteBuffers(1, &colorbuffer);
 }
 
 
@@ -97,7 +77,7 @@ void TerrainGraphicsComponent::Render(GameState& state)
 	// TODO: Cull Terrain
 
 	// Use our shader
-	glUseProgram(programID);
+	glUseProgram(renderer.programID);
 
 	// Our ModelViewProjection : multiplication of our 3 matrices
 	glm::mat4 MVP = state.camera.GetPVMatrix() * modelMatrix; // Remember, matrix multiplication is the other way around
@@ -105,7 +85,7 @@ void TerrainGraphicsComponent::Render(GameState& state)
 	// Send our transformation to the currently bound shader,
 	// in the "MVP" uniform
 	// For each model you render, since the MVP will be different (at least the M part)
-	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+	glUniformMatrix4fv(renderer.matrixID, 1, GL_FALSE, &MVP[0][0]);
 
 	// 1rst attribute buffer : vertices
 	glEnableVertexAttribArray(0);
@@ -136,5 +116,6 @@ void TerrainGraphicsComponent::Render(GameState& state)
 	glDrawArrays(GL_TRIANGLES, 0, g_vertex_buffer_data.size()); // Starting from vertex 0; 3 vertices total -> 1 triangle
 
 	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
 
 }
