@@ -6,7 +6,7 @@
 class Entity
 {
 public:
-	Entity(glm::vec3 position = glm::vec3(), glm::vec2 size = glm::vec2(1,2));
+	Entity(glm::vec3 position = glm::vec3(), glm::vec2 size = glm::vec2(2,4));
 	~Entity();
 
 	/// The type determines which kind of entity this is

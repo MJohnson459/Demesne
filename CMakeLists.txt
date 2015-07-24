@@ -12,10 +12,14 @@ find_package(OpenGL REQUIRED)
 
 # Compile external dependencies 
 add_subdirectory (external)
+add_subdirectory (external/libnoise)
+add_subdirectory (external/gli)
 
 include_directories(
-	external/glm-0.9.4.0/
+	external/glm-0.9.7.A/
 	external/glew-1.9.0/include/
+	external/libnoise/src/
+	external/gli/
 	.
 )
 
@@ -32,7 +36,7 @@ MESSAGE( STATUS "SFML_FOUND:         " ${SFML_FOUND} )
 
 include_directories(${SFML_INCLUDE_DIR} ${OPENGL_INCLUDE_DIRS})
 add_executable(${EXECUTABLE_NAME} ${files} ${headers})
-target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${OPENGL_LIBRARY} GLEW_190)
+target_link_libraries(${EXECUTABLE_NAME} ${SFML_LIBRARIES} ${OPENGL_LIBRARY} GLEW_190 noise)
 
 add_custom_command( TARGET ${EXECUTABLE_NAME}
     POST_BUILD

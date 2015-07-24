@@ -5,6 +5,7 @@
 #include <GameState.h>
 #include <vector>
 #include <OpenGLRenderer.h>
+#include <iostream>
 
 
 /// Draws the terrain
@@ -31,13 +32,21 @@ private:
 	/// Color buffer
 	std::vector<glm::vec3> g_color_buffer_data;
 
+	std::vector<glm::vec2> g_texture_buffer_data;
 
+	GLuint texture;
 	
 
 	/// Vertex position buffer id
 	GLuint vertexbuffer;
 	/// Vertex color buffer id
 	GLuint colorbuffer;
+
+
+	GLuint texturebuffer;
+
+	GLuint CreateTextureArray(char const* Filename);
+	GLuint CreateTexture(char const* Filename);
 	
 };
 

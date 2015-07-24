@@ -3,8 +3,10 @@
 #include <ostream>
 #include <vector>
 #include <random>
-#include <glm\glm.hpp>
+#include <glm/glm.hpp>
 #include <Entity.h>
+
+#include <noise/noise.h>
 
 /// Struct which stores all the information about a particular block type
 struct BlockType
@@ -41,6 +43,10 @@ private:
 	
 	/// The array storing the terrain
 	std::vector<uint16_t> tiles;
+
+	void GenerateTerrain();
+
+	int GenHeight(int x, noise::module::Blend& blend) const;
 	
 };
 

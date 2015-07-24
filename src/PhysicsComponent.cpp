@@ -13,7 +13,7 @@ PhysicsComponent::~PhysicsComponent()
 
 void PhysicsComponent::Update(GameState& state)
 {
-	glm::vec3 gravity(0.0f, -0.03f, 0.0f);
+	glm::vec3 gravity(0.0f, -0.02f, 0.0f);
 	entity.velocity += gravity;
 	entity.position += entity.velocity;
 }

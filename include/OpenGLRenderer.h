@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <shader.hpp>
+#include <cstdio>
 
 class OpenGLRenderer
 {
@@ -22,5 +23,7 @@ public:
 
 	/// PVM matrix id
 	GLuint matrixID;
+
+	GLuint textureID;
 };
 

@@ -12,7 +12,7 @@ OpenGLRenderer::OpenGLRenderer()
 	}
 	
 	// Create and compile our GLSL program from the shaders
-	programID = LoadShaders("data/shaders/SimpleVertexShader.vertexshader", "data/shaders/SimpleFragmentShader.fragmentshader");
+	programID = LoadShaders("data/shaders/SimpleVertexShader.vert", "data/shaders/SimpleFragmentShader.frag");
 
 
 	glGenVertexArrays(1, &vertexArrayID);
@@ -21,6 +21,12 @@ OpenGLRenderer::OpenGLRenderer()
 	// Get a handle for our "MVP" uniform.
 	// Only at initialisation time.
 	matrixID = glGetUniformLocation(programID, "MVP");
+
+	// Get a handle for our "myTextureSampler" uniform
+	textureID = glGetUniformLocation(programID, "myTextureSampler");
+
+	printf("matrixID: %d\n", matrixID);
+	printf("textureID: %d\n", textureID);
 }
 
 

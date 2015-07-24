@@ -16,7 +16,8 @@ Camera::~Camera()
 glm::mat4 Camera::GetPVMatrix()
 {
 	// Focus on centre of block (0,0)
-	glm::mat4 Projection = glm::ortho(WIDTH / -40.0f + 1, WIDTH / 40.0f + 1, HEIGHT / -40.0f + 1, HEIGHT / 40.0f + 1, 0.1f, 100.0f);
+	float zoom = 50.0f;
+	glm::mat4 Projection = glm::ortho(WIDTH / -zoom + 1, WIDTH / zoom + 1, HEIGHT / -zoom + 1, HEIGHT / zoom + 1, 0.1f, 100.0f);
 
 
 	// Camera matrix

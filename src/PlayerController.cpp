@@ -15,12 +15,12 @@ PlayerController::~PlayerController()
 
 void PlayerController::Update(GameState& state)
 {
-	entity.acceleration[0] = - entity.velocity[0] / 5.0;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	entity.acceleration[0] = -entity.velocity[0] / 5.0;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && entity.acceleration[0] > -0.005f)
 	{
 		entity.acceleration[0] = -0.005f;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && entity.acceleration[0] < 0.005f)
 	{
 		entity.acceleration[0] = 0.005f;
 	}

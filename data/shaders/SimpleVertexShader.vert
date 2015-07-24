@@ -4,6 +4,10 @@
 layout(location = 0) in vec3 vertexPosition_modelspace;
 // Notice that the "1" here equals the "1" in glVertexAttribPointer
 layout(location = 1) in vec3 vertexColor;
+layout(location = 2) in vec2 vertexUV;
+
+// Output data ; will be interpolated for each fragment.
+out vec2 UV;
 
 uniform mat4 MVP;
 
@@ -18,5 +22,8 @@ void main(){
 	// The color of each vertex will be interpolated
     // to produce the color of each fragment
     fragmentColor = vertexColor;
+
+	// UV of the vertex. No special space for this one.
+    UV = vertexUV;
 }
 
