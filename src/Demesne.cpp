@@ -86,6 +86,9 @@ void Demesne::Execute()
 
 			if (event.type == sf::Event::KeyReleased)
 				playerController.HandleKeyReleased(event.key.code);
+
+			if (event.type == sf::Event::MouseWheelMoved)
+				state.camera.Zoom(event.mouseWheel.delta);
 				
 		}
 

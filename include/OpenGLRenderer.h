@@ -15,8 +15,8 @@
 #define DEBUG_OPENGL(str) do { \
 	GLenum err; \
 	while ((err = glGetError()) != GL_NO_ERROR) {\
-		std::cout << str << std::endl; \
-		printf("OpenGL error: %s", err);\
+		printf("%s\n", str); \
+		printf("OpenGL error: %s\n", gluErrorString(err));\
 	}\
 } while( false )
 #else
@@ -31,6 +31,8 @@ public:
 
 	/// Load texture from file
 	GLuint CreateTexture(char const* Filename);
+
+	GLuint LoadTextures(std::string path);
 
 	// OpenGL variables
 

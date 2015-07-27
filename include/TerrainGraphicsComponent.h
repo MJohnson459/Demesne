@@ -32,7 +32,7 @@ private:
 	/// Color buffer
 	std::vector<glm::vec3> g_color_buffer_data;
 	/// UV texture coordinate array
-	std::vector<glm::vec2> g_texture_buffer_data;
+	std::vector<glm::vec3> g_texture_buffer_data;
 
 	/// id of the terrain texture
 	GLuint terrain_texture_atlas;

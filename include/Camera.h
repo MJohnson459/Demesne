@@ -22,6 +22,8 @@ public:
 	/// Change the viewport size
 	void ChangeSize(uint32_t width, uint32_t height);
 
+	void Zoom(int delta);
+
 private:
 	/// Current position of the camera
 	glm::vec3 position;
@@ -33,6 +35,8 @@ private:
 	uint32_t HEIGHT;
 	/// Viewport width
 	uint32_t WIDTH;
+
+	float zoom;
 };
 
 

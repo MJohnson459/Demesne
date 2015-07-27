@@ -11,11 +11,14 @@
 /// Struct which stores all the information about a particular block type
 struct BlockType
 {
-	/// uint16_t id;
+	static uint16_t MAX_ID;
+	uint16_t id;
 	glm::vec3 color;
 
 	BlockType(glm::vec3 color)
-		: color(color){};
+		: color(color){
+		id = MAX_ID++;
+	};
 };
 
 /// Holds an array representing the terrain

@@ -5,6 +5,7 @@ Camera::Camera(uint32_t width, uint32_t height, Entity& entity)
 	, entity(entity)
 	, HEIGHT(height)
 	, WIDTH(width)
+	, zoom(20.0f)
 {
 }
 
@@ -16,7 +17,7 @@ Camera::~Camera()
 glm::mat4 Camera::GetPVMatrix()
 {
 	// Focus on centre of block (0,0)
-	float zoom = 20.0f;
+	
 	glm::mat4 Projection = glm::ortho(WIDTH / -zoom + 1, WIDTH / zoom + 1, HEIGHT / -zoom + 1, HEIGHT / zoom + 1, 0.1f, 100.0f);
 
 
@@ -36,4 +37,9 @@ void Camera::ChangeSize(uint32_t width, uint32_t height)
 {
 	WIDTH = width;
 	HEIGHT = height;
+}
+
+void Camera::Zoom(int delta)
+{
+	zoom += delta;
 }

@@ -1,13 +1,15 @@
 #include "Terrain.h"
 
+uint16_t BlockType::MAX_ID = 0;
+
 Terrain::Terrain()
 {
 
 	block_types.push_back(BlockType(glm::vec3(0.1f, 0.4f, 0.8f)));
-	block_types.push_back(BlockType(glm::vec3(0, 0.2, 0)));
-	block_types.push_back(BlockType(glm::vec3(0, 0, 0.2)));
-	block_types.push_back(BlockType(glm::vec3(0.2, 0, 0)));
-	block_types.push_back(BlockType(glm::vec3(0.2, 0, 0.2)));
+	block_types.push_back(BlockType(glm::vec3()));
+	block_types.push_back(BlockType(glm::vec3()));
+	block_types.push_back(BlockType(glm::vec3()));
+	block_types.push_back(BlockType(glm::vec3()));
 
 
 	GenerateTerrain();
