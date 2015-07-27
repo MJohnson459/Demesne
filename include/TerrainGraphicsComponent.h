@@ -31,22 +31,18 @@ private:
 	std::vector<glm::vec3> g_vertex_buffer_data;
 	/// Color buffer
 	std::vector<glm::vec3> g_color_buffer_data;
-
+	/// UV texture coordinate array
 	std::vector<glm::vec2> g_texture_buffer_data;
 
-	GLuint texture;
+	/// id of the terrain texture
+	GLuint terrain_texture_atlas;
 	
-
 	/// Vertex position buffer id
-	GLuint vertexbuffer;
+	GLuint vertex_buffer;
 	/// Vertex color buffer id
-	GLuint colorbuffer;
+	GLuint color_buffer;
 
-
-	GLuint texturebuffer;
-
-	GLuint CreateTextureArray(char const* Filename);
-	GLuint CreateTexture(char const* Filename);
-	
+	/// texture buffer
+	GLuint texture_buffer;	
 };
 

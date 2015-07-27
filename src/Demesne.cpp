@@ -24,7 +24,9 @@ void Demesne::Execute()
 
 	//cout << "Version " << myproject_VERSION_MAJOR << "." << myproject_VERSION_MINOR << endl;
 
-	sf::Window window(sf::VideoMode(800, 600), "Demesne");
+	uint32_t width = 1600, height = 1200;
+
+	sf::Window window(sf::VideoMode(width, height), "Demesne");
 
 	sf::ContextSettings settings = window.getSettings();
 
@@ -36,7 +38,7 @@ void Demesne::Execute()
 
 	Entity player;
 
-	GameState state(player);
+	GameState state(player, width, height);
 	//TerrainGraphicsComponent renderer(state);
 
 	PlayerController playerController(player);

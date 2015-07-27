@@ -1,8 +1,8 @@
 #include "GameState.h"
 
 
-GameState::GameState(Entity& player)
-	: camera(800, 600, player)
+GameState::GameState(Entity& player, uint32_t width, uint32_t height)
+	: camera(width, height, player)
 {
 
 }
