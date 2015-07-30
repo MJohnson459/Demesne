@@ -81,7 +81,7 @@ TerrainGraphicsComponent::TerrainGraphicsComponent(GameState& state, OpenGLRende
 	}
 
 
-	terrain_texture_atlas = renderer.LoadTextures("data/textures/terrain/stonebrick.dds");
+	terrain_texture_atlas = renderer.LoadTextures("data/textures/terrain/terrain.dds");
 
 	// The following commands will talk about our 'vertexbuffer' buffer
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);

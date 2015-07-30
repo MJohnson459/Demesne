@@ -35,52 +35,13 @@ OpenGLRenderer::~OpenGLRenderer()
 	glDeleteVertexArrays(1, &vertexArrayID);
 }
 
-
-GLuint OpenGLRenderer::CreateTexture(char const* Filename)
-{
-	// Check if we have already loaded the file
-	auto id = textureMap.find(Filename);
-	if (id != textureMap.end())
-	{
-		return id->second;
-	}
-
-	gli::texture2D Texture(gli::load_dds(Filename));
-	assert(!Texture.empty());
-	gli::gl GL;
-	gli::gl::format const Format = GL.translate(Texture.format());
-	GLint const MaxLevels = static_cast<GLint>(Texture.levels() - 1);
-
-	GLuint TextureName = 0;
-	glGenTextures(1, &TextureName);
-	glBindTexture(GL_TEXTURE_2D, TextureName);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	printf("texture size: %d\n", static_cast<GLsizei>(Texture[0].size()));
-	printf("texture Format.Internal: %d\n", Format.Internal);
-	printf("texture size.x: %d\n", static_cast<GLsizei>(Texture[0].dimensions().x));
-	printf("texture size.y: %d\n", static_cast<GLsizei>(Texture[0].dimensions().y));
-	printf("texture id: %d\n", TextureName);
-
-	glCompressedTexImage2D(GL_TEXTURE_2D, 0, Format.Internal,
-		static_cast<GLsizei>(Texture[0].dimensions().x),
-		static_cast<GLsizei>(Texture[0].dimensions().y),
-		0,
-		static_cast<GLsizei>(Texture[0].size()),
-		Texture[0].data());
-
-	return TextureName;
-}
-
 GLuint OpenGLRenderer::LoadTextures(std::string Filename)
 {
 
 	GLuint TextureName = 0;
 	const GLsizei width = 128;
 	const GLsizei height = 128;
-	GLsizei layerCount = 2;
+	GLsizei layerCount = 64;
 
 	GetDDSFiles(Filename);
 
@@ -130,8 +91,8 @@ GLuint OpenGLRenderer::LoadTextures(std::string Filename)
 
 	DEBUG_OPENGL("glTexParameteri");
 
-	for (GLint layer = 0; layer < layerCount; ++layer)
-	{
+	//for (GLint layer = 0; layer < layerCount; ++layer)
+	//{
 		gli::texture2D Texture(gli::load_dds(Filename));
 		assert(!Texture.empty());
 		gli::gl GL;
@@ -143,10 +104,10 @@ GLuint OpenGLRenderer::LoadTextures(std::string Filename)
 		//The final 0 refers to the layer index offset (we start from index 0 and have 2 levels).
 		//Altogether you can specify a 3D box subset of the overall texture, but only one mip level at a time.
 		//glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, layer, width, height, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		glCompressedTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, layer, 
+		glCompressedTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, 
 			static_cast<GLsizei>(Texture[0].dimensions().x),
 			static_cast<GLsizei>(Texture[0].dimensions().y),
-			1, 
+			64, 
 			Format.External, 
 			static_cast<GLsizei>(Texture[0].size()), 
 			Texture[0].data()
@@ -173,7 +134,7 @@ GLuint OpenGLRenderer::LoadTextures(std::string Filename)
 		DEBUG_OPENGL("glCompressedTexSubImage3D");
 
 		
-	}
+	//}
 	
 	DEBUG_OPENGL("LoadTextures");
 	return TextureName;
