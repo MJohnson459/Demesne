@@ -32,9 +32,9 @@ public:
 	/// Load texture from file
 	GLuint CreateTexture(char const* Filename);
 
-	GLuint LoadTextures(std::string path);
+	GLuint LoadTexture(std::string path);
 
-	std::vector<std::string> GetDDSFiles(std::string path);
+	GLint textureCount;
 
 	// OpenGL variables
 
@@ -50,6 +50,13 @@ public:
 	GLuint samplerID;
 
 	std::map<std::string, GLuint> textureMap;
+
+
+	// Terrain Textures
+	GLuint terrainTextureId;
+	const GLsizei terrainTileWidth = 128;
+	const GLsizei terrainTileHeight = 128;
+	const GLsizei maxTerrainTiles = 64;
 
 	
 };
