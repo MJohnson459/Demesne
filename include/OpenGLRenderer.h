@@ -34,6 +34,8 @@ public:
 
 	GLuint LoadTextures(std::string path);
 
+	std::vector<std::string> GetDDSFiles(std::string path);
+
 	// OpenGL variables
 
 	/// Loaded GLSL program

@@ -20,8 +20,8 @@ void main()
     // color = fragmentColor;
 
 	// Output color = color of the texture at the specified UV
-	//color = texture(textureSampler, UV).rgb + fragmentColor;
+	color = texture(textureSampler, UV).rgb + fragmentColor;
 	//color = texture(textureSampler, vec3(0.5,0.5,1)).rgb + fragmentColor;
-	color = UV;
+	//color = texture(textureSampler, UV).rgb + UV;
 
 }

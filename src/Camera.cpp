@@ -5,7 +5,7 @@ Camera::Camera(uint32_t width, uint32_t height, Entity& entity)
 	, entity(entity)
 	, HEIGHT(height)
 	, WIDTH(width)
-	, zoom(20.0f)
+	, zoom(30.0f)
 {
 }
 

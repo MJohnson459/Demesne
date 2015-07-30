@@ -20,7 +20,8 @@ TerrainGraphicsComponent::TerrainGraphicsComponent(GameState& state, OpenGLRende
 
 	// Generate 1 buffer, put the resulting identifier in vertexbuffer
 	glGenBuffers(1, &vertex_buffer);
-	glGenBuffers(1, &color_buffer);	
+	glGenBuffers(1, &color_buffer);
+	glGenBuffers(1, &texture_buffer);
 
 
 	g_vertex_buffer_data.clear();
@@ -36,7 +37,7 @@ TerrainGraphicsComponent::TerrainGraphicsComponent(GameState& state, OpenGLRende
 	
 	float texture_size = 128.0;
 	float texture_per_row = texture_size / 1024.0;
-	uint32_t blocks_per_texture = 1;
+	uint32_t blocks_per_texture = 4;
 	float block_texture = 1.0 / blocks_per_texture; // 0.25;
 
 	for (int i = -xOffset; i < xOffset / 2; ++i)
@@ -80,7 +81,7 @@ TerrainGraphicsComponent::TerrainGraphicsComponent(GameState& state, OpenGLRende
 	}
 
 
-	terrain_texture_atlas = renderer.LoadTextures("data/textures/terrain/terrain.dds");
+	terrain_texture_atlas = renderer.LoadTextures("data/textures/terrain/stonebrick.dds");
 
 	// The following commands will talk about our 'vertexbuffer' buffer
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
@@ -131,7 +132,7 @@ void TerrainGraphicsComponent::Render(GameState& state)
 
 	// Bind our texture in Texture Unit 0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, terrain_texture_atlas);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, terrain_texture_atlas);
 	// Set our "myTextureSampler" sampler to user Texture Unit 0
 	glUniform1i(renderer.samplerID, 0);
 
