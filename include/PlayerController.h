@@ -23,6 +23,10 @@ private:
 
 	bool jumping;
 
-	float maxSpeed;
+	float maxSpeedX;
+	float maxSpeedY;
+
+	float maxHover;
+	float remainingHover;
 };
 
