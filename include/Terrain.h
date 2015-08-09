@@ -34,6 +34,11 @@ public:
 	/// Get block type at (x,y)
 	uint16_t& operator()(glm::vec2 vec);
 
+	void Set(int x, int y, uint16_t type);
+	void Set(glm::vec2 pos, uint16_t type);
+
+	void Update();
+
 	/// Width of the terrain
 	static const uint32_t WIDTH = 1000;
 
@@ -42,6 +47,8 @@ public:
 
 	/// A vector of the currently loaded block types
 	std::vector<BlockType> block_types;
+
+	std::vector<glm::vec2> updated;
 private:
 	
 	/// The array storing the terrain
@@ -50,6 +57,8 @@ private:
 	void GenerateTerrain();
 
 	int GenHeight(int x, noise::module::Blend& blend) const;
+
+	size_t GetIndex(glm::vec2 pos) const;
 	
 };
 

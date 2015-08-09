@@ -24,6 +24,8 @@ public:
 
 	void Zoom(int delta);
 
+	glm::vec2 ScreenToWorld(int x, int y);
+
 private:
 	/// Current position of the camera
 	glm::vec3 position;

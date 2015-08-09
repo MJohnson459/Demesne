@@ -6,6 +6,7 @@
 #include <vector>
 #include <OpenGLRenderer.h>
 #include <iostream>
+#include <algorithm> 
 
 
 /// Draws the terrain
@@ -20,6 +21,11 @@ public:
 	void Render(GameState& state);
 
 private:
+
+	void GenerateBuffers(Terrain& terrain, OpenGLRenderer& renderer);
+	void UpdateBuffers(Terrain& terrain, OpenGLRenderer& renderer);
+
+	// OpenGL Variables
 
 	OpenGLRenderer& renderer;
 

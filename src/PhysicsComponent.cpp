@@ -43,4 +43,5 @@ void PhysicsComponent::HandleCollision(glm::vec2 collision)
 		entity.position[1] = floor(entity.position[1] - entity.velocity[1]);
 		entity.velocity[1] = 0;
 	}
+
 }

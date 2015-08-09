@@ -97,3 +97,37 @@ int Terrain::GenHeight(int x, noise::module::Blend& blend) const {
 
 	return result > HEIGHT ? HEIGHT : result;
 }
+
+size_t Terrain::GetIndex(glm::vec2 pos) const
+{
+	pos[0] = floor(pos[0]);
+	pos[1] = floor(pos[1]);
+
+	pos[0] += WIDTH / 2;
+	pos[1] += HEIGHT / 2;
+
+	if (pos[0] >= WIDTH) pos[0] = WIDTH - 1;
+	if (pos[1] >= HEIGHT) pos[1] = HEIGHT - 1;
+
+	return pos[0]*Terrain::HEIGHT + pos[1];
+}
+
+void Terrain::Set(int x, int y, uint16_t type)
+{
+	Set(glm::vec2(x, y), type);
+}
+void Terrain::Set(glm::vec2 pos, uint16_t type)
+{
+	size_t index = GetIndex(pos);
+
+	if (tiles[index] != type)
+	{
+		printf("Setting tile (%f,%f) to %i\n", pos[0], pos[1], type);
+		tiles[index] = type;
+		updated.push_back(pos);
+	}
+}
+
+void Terrain::Update()
+{
+}

@@ -8,7 +8,7 @@
 class GameState
 {
 public:
-	GameState(Entity& player, uint32_t width, uint32_t height);
+	GameState(Entity& player, uint32_t width, uint32_t height, const sf::Window& window);
 	~GameState();
 
 	/// Save the current game state
@@ -17,10 +17,14 @@ public:
 	/// Load a previously saved game state
 	void Load(std::string file);
 
+	void Update();
+
 	/// The current world loaded
 	Terrain terrain;
 
 	/// The current view
 	Camera camera;
+
+	const sf::Window& window;
 };
 

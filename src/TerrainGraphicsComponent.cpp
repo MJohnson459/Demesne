@@ -24,84 +24,14 @@ TerrainGraphicsComponent::TerrainGraphicsComponent(GameState& state, OpenGLRende
 	glGenBuffers(1, &texture_buffer);
 
 
-	g_vertex_buffer_data.clear();
-	g_color_buffer_data.clear();
-	g_texture_buffer_data.clear();
-	g_vertex_buffer_data.reserve(state.terrain.WIDTH*state.terrain.HEIGHT/2);
-	g_color_buffer_data.reserve(state.terrain.WIDTH*state.terrain.HEIGHT/2);
-	g_texture_buffer_data.reserve(state.terrain.WIDTH*state.terrain.HEIGHT/2);
-
-	int xOffset = state.terrain.WIDTH / 2;
-	int yOffset = state.terrain.HEIGHT / 2;
-
-	
-	float texture_size = 128.0;
-	float texture_per_row = texture_size / 1024.0;
-	uint32_t blocks_per_texture = 4;
-	float block_texture = 1.0 / blocks_per_texture; // 0.25;
-
-	for (int i = -xOffset; i < xOffset / 2; ++i)
-	{
-		for (int j = -yOffset; j < yOffset / 2; ++j)
-		{
-			if (state.terrain(i, j) == 0) continue;
-
-			float a = i + xOffset;
-			float b = j + yOffset;
-			BlockType type = state.terrain.block_types[state.terrain(i, j)];
-			g_vertex_buffer_data.push_back(glm::vec3(a,        b,        0.0f));
-			g_vertex_buffer_data.push_back(glm::vec3(a + 1.0f, b,        0.0f));
-			g_vertex_buffer_data.push_back(glm::vec3(a + 1.0f, b + 1.0f, 0.0f));
-
-			g_vertex_buffer_data.push_back(glm::vec3(a,        b,        0.0f));
-			g_vertex_buffer_data.push_back(glm::vec3(a + 1.0f, b + 1.0f, 0.0f));
-			g_vertex_buffer_data.push_back(glm::vec3(a,        b + 1.0f, 0.0f));
-
-			g_color_buffer_data.push_back(type.color);
-			g_color_buffer_data.push_back(type.color);
-			g_color_buffer_data.push_back(type.color);
-			g_color_buffer_data.push_back(type.color);
-			g_color_buffer_data.push_back(type.color);
-			g_color_buffer_data.push_back(type.color);
-
-			//printf("j % blocks_per_texture: %d\n", j % blocks_per_texture);
-			//printf("j & 0x03: %d\n", j & 0x03);
-
-			float u = (i % blocks_per_texture)*block_texture;
-			float v = (j % blocks_per_texture)*block_texture;
-			g_texture_buffer_data.push_back(glm::vec3(u, v, type.id));
-			g_texture_buffer_data.push_back(glm::vec3(u + block_texture, v, type.id));
-			g_texture_buffer_data.push_back(glm::vec3(u + block_texture, v + block_texture, type.id));
-
-			g_texture_buffer_data.push_back(glm::vec3(u, v, type.id));
-			g_texture_buffer_data.push_back(glm::vec3(u + block_texture, v + block_texture, type.id));
-			g_texture_buffer_data.push_back(glm::vec3(u, v + block_texture, type.id));
-			
-		}
-	}
+	GenerateBuffers(state.terrain, renderer);
 
 
 	terrain_texture_atlas = renderer.LoadTexture("data/textures/terrain/stonebrick.dds");
 	terrain_texture_atlas = renderer.LoadTexture("data/textures/terrain/dirt.dds");
 	terrain_texture_atlas = renderer.LoadTexture("data/textures/terrain/stonebrick.dds");
 
-	// The following commands will talk about our 'vertexbuffer' buffer
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-	// Give our vertices to OpenGL.
-	glBufferData(GL_ARRAY_BUFFER, g_vertex_buffer_data.size()*sizeof(g_vertex_buffer_data[0]), g_vertex_buffer_data.data(), GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, color_buffer);
-	glBufferData(GL_ARRAY_BUFFER, g_color_buffer_data.size()*sizeof(g_color_buffer_data[0]), g_color_buffer_data.data(), GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, texture_buffer);
-	glBufferData(GL_ARRAY_BUFFER, g_texture_buffer_data.size()*sizeof(g_texture_buffer_data[0]), g_texture_buffer_data.data(), GL_STATIC_DRAW);
-
-	GLenum err; 
-	while ((err = glGetError()) != GL_NO_ERROR) {
-			printf("OpenGL error: %s\n", err); 
-	}
 	
-	DEBUG_OPENGL("Initialised Terrain buffers");
 }
 
 
@@ -117,7 +47,12 @@ TerrainGraphicsComponent::~TerrainGraphicsComponent()
 
 void TerrainGraphicsComponent::Render(GameState& state)
 {
-	
+	if (state.terrain.updated.size() > 0)
+	{
+		UpdateBuffers(state.terrain, renderer);
+		state.terrain.updated.clear();
+	}
+		
 
 	// TODO: Cull Terrain
 
@@ -188,4 +123,121 @@ void TerrainGraphicsComponent::Render(GameState& state)
 
 	//DEBUG_OPENGL("Terrain: Finished Rendering");
 
+}
+
+void TerrainGraphicsComponent::GenerateBuffers(Terrain& terrain, OpenGLRenderer& renderer)
+{
+	int vertices = terrain.WIDTH*terrain.HEIGHT * 6;
+	g_vertex_buffer_data.clear();
+	g_color_buffer_data.clear();
+	g_texture_buffer_data.clear();
+	g_vertex_buffer_data.reserve(vertices);
+	g_color_buffer_data.reserve(vertices);
+	g_texture_buffer_data.reserve(vertices);
+
+	int xOffset = terrain.WIDTH / 2;
+	int yOffset = terrain.HEIGHT / 2;
+
+
+	float texture_size = 128.0;
+	float texture_per_row = texture_size / 1024.0;
+	uint32_t blocks_per_texture = 4;
+	float block_texture = 1.0 / blocks_per_texture; // 0.25;
+
+	for (int i = -xOffset; i < xOffset; ++i)
+	{
+		for (int j = -yOffset; j < yOffset; ++j)
+		{
+			float a = i + xOffset;
+			float b = j + yOffset;
+			BlockType type = terrain.block_types[terrain(i, j)];
+			g_vertex_buffer_data.push_back(glm::vec3(a, b, 0.0f));
+			g_vertex_buffer_data.push_back(glm::vec3(a + 1.0f, b, 0.0f));
+			g_vertex_buffer_data.push_back(glm::vec3(a + 1.0f, b + 1.0f, 0.0f));
+
+			g_vertex_buffer_data.push_back(glm::vec3(a, b, 0.0f));
+			g_vertex_buffer_data.push_back(glm::vec3(a + 1.0f, b + 1.0f, 0.0f));
+			g_vertex_buffer_data.push_back(glm::vec3(a, b + 1.0f, 0.0f));
+		}
+	}
+
+	g_color_buffer_data.resize(vertices, glm::vec3(0, 0, 0));
+
+	for (int i = -xOffset; i < xOffset; ++i)
+	{
+		for (int j = -yOffset; j < yOffset; ++j)
+		{
+			BlockType type = terrain.block_types[terrain(i, j)];
+			float u = (i % blocks_per_texture)*block_texture;
+			float v = (j % blocks_per_texture)*block_texture;
+			g_texture_buffer_data.push_back(glm::vec3(u, v, type.id));
+			g_texture_buffer_data.push_back(glm::vec3(u + block_texture, v, type.id));
+			g_texture_buffer_data.push_back(glm::vec3(u + block_texture, v + block_texture, type.id));
+
+			g_texture_buffer_data.push_back(glm::vec3(u, v, type.id));
+			g_texture_buffer_data.push_back(glm::vec3(u + block_texture, v + block_texture, type.id));
+			g_texture_buffer_data.push_back(glm::vec3(u, v + block_texture, type.id));
+
+		}
+	}
+
+	// The following commands will talk about our 'vertexbuffer' buffer
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+	// Give our vertices to OpenGL.
+	glBufferData(GL_ARRAY_BUFFER, g_vertex_buffer_data.size()*sizeof(g_vertex_buffer_data[0]), g_vertex_buffer_data.data(), GL_DYNAMIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, color_buffer);
+	glBufferData(GL_ARRAY_BUFFER, g_color_buffer_data.size()*sizeof(g_color_buffer_data[0]), g_color_buffer_data.data(), GL_DYNAMIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, texture_buffer);
+	glBufferData(GL_ARRAY_BUFFER, g_texture_buffer_data.size()*sizeof(g_texture_buffer_data[0]), g_texture_buffer_data.data(), GL_DYNAMIC_DRAW);
+
+	DEBUG_OPENGL("Initialised Terrain buffers");
+}
+void TerrainGraphicsComponent::UpdateBuffers(Terrain& terrain, OpenGLRenderer& renderer)
+{
+	int vertices = terrain.WIDTH*terrain.HEIGHT * 6;
+	int xOffset = terrain.WIDTH / 2;
+	int yOffset = terrain.HEIGHT / 2;
+
+	float texture_size = 128.0;
+	float texture_per_row = texture_size / 1024.0;
+	uint32_t blocks_per_texture = 4;
+	float block_texture = 1.0 / blocks_per_texture; // 0.25;
+
+	printf("size(): %d, vertices: %d\n", g_texture_buffer_data.size(), vertices);
+
+	for (glm::vec2 pos : terrain.updated)
+	{
+		int i = floor(pos[0]);
+		int j = floor(pos[1]);
+
+		int a = i + xOffset;
+		int b = j + yOffset;
+
+		int vertex_index = terrain.HEIGHT*6*a + b*6;
+
+		assert(vertex_index < g_texture_buffer_data.size());
+
+		BlockType type = terrain.block_types[terrain(i, j)];
+
+		printf("updating id: %d to type: %d\n", vertex_index, type.id);
+		printf("i: %d, j: %d,  a: %d, b: %d \n", i,j,a,b);
+
+		float u = (a % blocks_per_texture)*block_texture;
+		float v = (b % blocks_per_texture)*block_texture;
+		g_texture_buffer_data[vertex_index++] = glm::vec3(u, v, type.id);
+		g_texture_buffer_data[vertex_index++] = glm::vec3(u + block_texture, v, type.id);
+		g_texture_buffer_data[vertex_index++] = glm::vec3(u + block_texture, v + block_texture, type.id);
+
+		g_texture_buffer_data[vertex_index++] = glm::vec3(u, v, type.id);
+		g_texture_buffer_data[vertex_index++] = glm::vec3(u + block_texture, v + block_texture, type.id);
+		g_texture_buffer_data[vertex_index++] = glm::vec3(u, v + block_texture, type.id);
+	}
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, texture_buffer);
+	glBufferData(GL_ARRAY_BUFFER, g_texture_buffer_data.size()*sizeof(g_texture_buffer_data[0]), g_texture_buffer_data.data(), GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	DEBUG_OPENGL("Initialised Terrain buffers");
 }

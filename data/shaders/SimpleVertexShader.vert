@@ -15,6 +15,13 @@ uniform mat4 MVP;
 out vec3 fragmentColor;
 
 void main(){
+	
+	if (vertexUV[2] == 0)
+	{
+		gl_Position = vec4(0, 0, 1, 0);    // Clipped! (with perspective projection)
+		return;
+	}
+
 	// Output position of the vertex, in clip space : MVP * position
     vec4 v = vec4(vertexPosition_modelspace,1); // Transform an homogeneous 4D vector, remember ?
     gl_Position = MVP * v;

@@ -38,7 +38,7 @@ void Demesne::Execute()
 
 	Entity player;
 
-	GameState state(player, width, height);
+	GameState state(player, width, height, window);
 	//TerrainGraphicsComponent renderer(state);
 
 	PlayerController playerController(player);
@@ -62,6 +62,8 @@ void Demesne::Execute()
 	int fps = 0;
 
 	int MS_PER_UPDATE = 10;
+	float MIN_FRAME_TIME_MS = 10.0; // 10ms
+
 	sf::Clock updateClock;
 	double lag = 0.0;
 
@@ -92,7 +94,6 @@ void Demesne::Execute()
 				
 		}
 
-		state.camera.Update();
 		while (lag >= MS_PER_UPDATE)
 		{
 			for (ControllerComponent* c : controllerComponents)
@@ -118,15 +119,26 @@ void Demesne::Execute()
 		{
 			g->Render(state);
 		}
+
+		// Update gamestate
+		state.Update();
+
 		
+		// Frame limit
+		if (updateClock.getElapsedTime().asMicroseconds() / 1000.0 < MIN_FRAME_TIME_MS)
+		{
+			//std::this_thread::sleep_for(std::chrono::milliseconds((long long)(MIN_FRAME_TIME_MS / 10.0)));
+			std::this_thread::sleep_for(std::chrono::milliseconds((long long)(MIN_FRAME_TIME_MS)));
+		}
 
 		window.display();
 
+		// Display fps
 		if (fpsClock.getElapsedTime().asSeconds() > 1.0)
 		{
 
 			std::stringstream title;
-			title << "Demense (FPS " << 1000.0/fps << ", Position (" << player.position[0] << ", " << player.position[1] << "))";
+			title << "Demense (Frame Time " << 1000.0/fps << "ms, Position (" << player.position[0] << ", " << player.position[1] << "))";
 			window.setTitle(title.str());
 
 			fpsClock.restart();
