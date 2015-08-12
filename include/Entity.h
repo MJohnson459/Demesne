@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 
 /// An Entity is a base game object
+/// 
+/// It should only contain data that needs to be shared between components
 class Entity
 {
 public:

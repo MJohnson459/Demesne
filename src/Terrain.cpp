@@ -73,7 +73,8 @@ void Terrain::GenerateTerrain()
 		//printf("h: %d \n", h);
 		for (int j = 0; j < h; ++j)
 		{
-			tiles.push_back(distribution(rand));
+			//tiles.push_back(distribution(rand));
+			tiles.push_back(1);
 		}
 
 		for (int j = h; j < HEIGHT; ++j)

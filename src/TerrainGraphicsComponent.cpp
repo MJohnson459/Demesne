@@ -139,10 +139,10 @@ void TerrainGraphicsComponent::GenerateBuffers(Terrain& terrain, OpenGLRenderer&
 	int yOffset = terrain.HEIGHT / 2;
 
 
-	float texture_size = 128.0;
-	float texture_per_row = texture_size / 1024.0;
+	float texture_size = 128.0f;
+	float texture_per_row = texture_size / 1024.0f;
 	uint32_t blocks_per_texture = 4;
-	float block_texture = 1.0 / blocks_per_texture; // 0.25;
+	float block_texture = 1.0f / blocks_per_texture; // 0.25;
 
 	for (int i = -xOffset; i < xOffset; ++i)
 	{
@@ -200,10 +200,10 @@ void TerrainGraphicsComponent::UpdateBuffers(Terrain& terrain, OpenGLRenderer& r
 	int xOffset = terrain.WIDTH / 2;
 	int yOffset = terrain.HEIGHT / 2;
 
-	float texture_size = 128.0;
-	float texture_per_row = texture_size / 1024.0;
+	float texture_size = 128.0f;
+	float texture_per_row = texture_size / 1024.0f;
 	uint32_t blocks_per_texture = 4;
-	float block_texture = 1.0 / blocks_per_texture; // 0.25;
+	float block_texture = 1.0f / blocks_per_texture; // 0.25;
 
 	printf("size(): %d, vertices: %d\n", g_texture_buffer_data.size(), vertices);
 

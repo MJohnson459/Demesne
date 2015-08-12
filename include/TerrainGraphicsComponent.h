@@ -22,7 +22,9 @@ public:
 
 private:
 
+	/// Generates the complete opengl buffers containing vertices for every terrain block
 	void GenerateBuffers(Terrain& terrain, OpenGLRenderer& renderer);
+	/// Updates the block type buffer using the terrain.updated vector.
 	void UpdateBuffers(Terrain& terrain, OpenGLRenderer& renderer);
 
 	// OpenGL Variables
